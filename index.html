@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clinical Methods: 100 MCQs (Bloom's)</title>
+<style>
+:root{--bg:#f6f8f8;--card:#fff;--tx:#1c2b2b;--mut:#5d7070;--bd:#d5dede;--ac:#0f766e;--ok:#15803d;--okb:#dcfce7;--no:#b91c1c;--nob:#fee2e2}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1717;--card:#172222;--tx:#e6f0f0;--mut:#8fa6a6;--bd:#2b3d3d;--ac:#2dd4bf;--ok:#4ade80;--okb:#14351f;--no:#f87171;--nob:#3b1717}}
+*{box-sizing:border-box}body{margin:0;font:16px/1.5 system-ui,sans-serif;background:var(--bg);color:var(--tx);padding:12px}
+.w{max-width:820px;margin:auto}h1{font-size:1.3rem;margin:.3rem 0}
+.bar{position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:5;border-bottom:1px solid var(--bd)}
+select,button{font:inherit;padding:6px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx)}
+button{cursor:pointer}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:6px}
+.q{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin:12px 0}
+.tags{font-size:.75rem;color:var(--mut);margin-bottom:4px}.tag{display:inline-block;padding:1px 8px;border-radius:99px;border:1px solid var(--ac);color:var(--ac);margin-right:4px}
+.o{display:block;width:100%;text-align:left;margin-top:6px}.o:hover{border-color:var(--ac)}
+.o.ok{background:var(--okb);border-color:var(--ok)}.o.no{background:var(--nob);border-color:var(--no)}
+.ex{display:none;margin-top:8px;padding:8px 10px;border-left:3px solid var(--ac);font-size:.92rem;color:var(--mut)}
+.done .ex{display:block}.done .o{pointer-events:none}
+</style></head><body><div class="w">
+<h1>Clinical Methods & Bedside Semiology: 100 MCQs</h1>
+<div style="color:var(--mut);font-size:.9rem">Tagged by Bloom's level: Remember, Understand, Apply, Analyze, Evaluate.</div>
+<div class="bar"><div class="row">
+<select id="fs"></select><select id="fb"></select><button id="rs">Reset</button>
+<b id="sc">Score: 0/0</b></div></div>
+<div id="list"></div></div>
+<script>
+const S=["","General Exam & Vitals","Lumps & Swellings","Ulcers, Sinuses & Perianal","Hernias & Scrotum","Acute Abdomen & Biliary","GI Bleed, Stomach & Obstruction","Urology & Paeds Tumours","Orthopaedics & Nerves","Burns & Shock","Breast & Chest"];
+const B={R:"Remember",U:"Understand",Ap:"Apply",An:"Analyze",E:"Evaluate"};
+const Q=[
+[1,"R","Minimum possible GCS score?",["0","1","3","5"],2,"E1+V1+M1 = 3. A GCS of 0 does not exist."],
+[1,"R","Serum bilirubin at which jaundice becomes clinically apparent?",["~17 μmol/L","34–50 μmol/L","~100 μmol/L","~200 μmol/L"],1,"About 2–3 mg/dL. Examine the sclera in natural daylight."],
+[1,"U","Best site to detect CENTRAL cyanosis?",["Fingertips","Ear lobes","Tongue and sublingual mucosa","Toe nailbeds"],2,"Central cyanosis reflects arterial desaturation and shows on warm mucous membranes."],
+[1,"U","Which condition ALONE does NOT cause finger clubbing?",["Bronchiectasis","COPD","Infective endocarditis","Cirrhosis"],1,"High-yield trap: COPD alone does not cause clubbing. Think lung cancer or bronchiectasis."],
+[1,"Ap","A patient lies motionless, knees flexed, and any movement causes agonising pain. Most likely?",["Renal colic","Biliary colic","Generalised peritonitis","Intestinal obstruction"],2,"Movement causes peritoneal friction. Colic patients writhe instead."],
+[1,"Ap","A patient writhes and cannot lie still with loin-to-groin pain. This posture suggests?",["Pericarditis","Colicky pain (renal colic)","Peritonitis","Raised ICP"],1,"Restless writhing = colic (renal, biliary, obstruction)."],
+[1,"R","GCS cut-off for severe head injury (secure airway)?",["≤ 8","≤ 10","≤ 12","≤ 13"],0,"Severe ≤ 8, moderate 9–12, mild 13–15. 'GCS 8, intubate.'"],
+[1,"Ap","Eyes open to pain, incomprehensible sounds, extension posturing. GCS?",["5","6","7","8"],1,"E2 + V2 + M2 = 6 (decerebrate posturing)."],
+[1,"U","MRC power grade 3 means?",["Movement only with gravity eliminated","Movement against gravity but not resistance","Movement against moderate resistance","Trace flicker only"],1,"Grade 2 = gravity eliminated; grade 4 = against moderate resistance."],
+[1,"R","Correct patient angle for measuring the JVP?",["0° (flat)","30°","45°","90°"],2,"The manual specifies exactly 45° reclined for the cardiovascular exam."],
+[1,"Ap","A young child with sickle cell disease has sudden pallor, massive splenomegaly and shock. Diagnosis?",["Autosplenectomy","Splenic sequestration","Acute chest syndrome","Dactylitis"],1,"Sequestration = rapid splenic enlargement with shock. Autosplenectomy leaves a small fibrotic spleen."],
+[1,"R","By what age do repeated infarcts typically cause autosplenectomy in HbSS?",["1–2 yrs","3–4 yrs","6–8 yrs","12–14 yrs"],2,"By age 6–8 the spleen is small, shrunken and calcified."],
+[1,"Ap","A child with bilateral muscle wasting and pitting oedema from protein malnutrition has?",["Marasmus","Kwashiorkor","Nephrotic syndrome","Cushing's syndrome"],1,"Kwashiorkor: hypoalbuminaemia causes oedema."],
+[1,"Ap","A hard, non-tender, fixed LEFT supraclavicular node points to spread from?",["Intra-abdominal (gastric) malignancy","Tonsillitis","Mumps","Dental abscess"],0,"Virchow's node / Troisier's sign, via the thoracic duct."],
+[1,"R","Proteinuria threshold defining nephrotic syndrome?",["> 0.5 g/24 h","> 1 g/24 h","> 3.5 g/24 h","> 10 g/24 h"],2,"> 3.5 g/24 h, hypoalbuminaemia, periorbital oedema and anasarca."],
+[2,"U","You cannot pinch the skin over a lump that has a central dark punctum. It is a?",["Lipoma","Sebaceous (epidermoid) cyst","Lymph node","Neurofibroma"],1,"The cyst is tethered to the epidermis at the punctum."],
+[2,"R","The 'slip sign' is characteristic of a?",["Sebaceous cyst","Lipoma","Fibroma","Ganglion"],1,"A lipoma slips away under the finger at its edge."],
+[2,"U","Why does a thyroglossal cyst move on tongue protrusion?",["Attached to the thyroid isthmus","Tract is attached to the foramen caecum at the tongue base","Attached to the cricoid","Lies in the carotid sheath"],1,"Thyroid goitre moves with swallowing only."],
+[2,"Ap","A lump becomes LESS mobile when the underlying muscle contracts. It is?",["Superficial to the muscle","Attached to muscle or fascia","Intradermal","Purely subcutaneous"],1,"If it becomes more prominent it lies superficial to the muscle."],
+[2,"Ap","A soft, lobulated, compressible, brilliantly transilluminant mass in an infant's posterior triangle?",["Branchial cyst","Cystic hygroma","Cervical rib","Carotid body tumour"],1,"Cystic hygroma (lymphangioma)."],
+[2,"Ap","A mass at the carotid bifurcation, mobile side-to-side but not vertically, with transmitted pulsation?",["Carotid body tumour","Branchial cyst","Thyroglossal cyst","Cystic hygroma"],0,"Fontaine's sign (chemodectoma)."],
+[2,"U","Compressible vs reducible: which pairing is correct?",["Hernia is compressible; haemangioma is reducible","Haemangioma is compressible; hernia is reducible","Both are compressible","Both are reducible"],1,"Compressible lumps refill at once; reducible lumps stay reduced until cough or standing."],
+[2,"Ap","A fluctuant painless swelling deep to the upper third of the anterior border of SCM?",["Branchial cyst","Tuberculous node","Lipoma","Goitre"],0,"Remnant of the 2nd branchial cleft with cholesterol-rich fluid."],
+[3,"R","An undermined edge is classic for?",["Venous ulcer","Basal cell carcinoma","TB or Buruli ulcer","Squamous cell carcinoma"],2,"Infection destroys subcutaneous tissue faster than the dermis."],
+[3,"Ap","Pearly-white rolled edge with fine telangiectasia and a central crater?",["Basal cell carcinoma","Marjolin's ulcer","Syphilitic gumma","Arterial ulcer"],0,"Rodent ulcer."],
+[3,"U","The toxin of Mycobacterium ulcerans (Buruli ulcer)?",["Exotoxin A","Mycolactone","Tetanospasmin","Shiga toxin"],1,"A cytotoxic macrolide causing fat necrosis and local immunosuppression."],
+[3,"R","WHO treatment for Buruli ulcer?",["Rifampicin + clarithromycin for 8 weeks","Ciprofloxacin for 5 days","Isoniazid for 6 months","Doxycycline alone"],0,"Surgical debridement for extensive necrosis."],
+[3,"Ap","A hard, everted, bleeding ulcer arising in an old burn scar?",["Marjolin's ulcer (SCC)","Venous ulcer","Buruli ulcer","Pressure sore"],0,"Everted rolled-out edges = squamous cell carcinoma."],
+[3,"U","Which best defines a SINUS?",["Communication between two epithelial surfaces","Blind-ending tract lined by granulation tissue","Collection of pus without a tract","Dilated lymph vessel"],1,"A fistula connects two epithelial-lined surfaces."],
+[3,"Ap","Goodsall's rule: a fistula with a POSTERIOR external opening tracks to?",["Straight radially","Curves to the posterior midline (6 o'clock)","Anterior midline","Lateral to the sphincter"],1,"Anterior openings run straight into the canal."],
+[3,"Ap","Sudden tense, purplish, very painful perianal lump after heavy lifting?",["Perianal abscess","Thrombosed external haemorrhoid","Anal fissure","Rectal prolapse"],1,"Treatment: elliptical excision of the thrombus."],
+[3,"R","Commonest site of anal fissure?",["Posterior midline (90%)","Anterior midline","Left lateral","Right lateral"],0,"Chronic triad: deep fissure, sentinel tag, hypertrophied papilla."],
+[3,"E","Examiner says 'bleeds on gentle touch' means UNHEALTHY granulation. Evaluate.",["Correct, bleeding is always unhealthy","Incorrect, healthy granulation is vascular and bleeds readily","Correct only in venous ulcers","Incorrect only in children"],1,"Healthy granulation is salmon-pink, velvety and bleeds easily. Know the exam-key artifact (Section 13 trap 7)."],
+[3,"Ap","A shallow, painless ulcer with sloping edge and haemosiderin pigmentation at the gaiter area?",["Arterial ulcer","Venous ulcer","Neuropathic ulcer","Basal cell carcinoma"],1,"Sloping edge = healing; venous stasis."],
+[4,"R","In the MALT mnemonic, 'A' stands for?",["Arch of transversalis","Aponeurosis of external oblique (anterior wall)","Adductor tubercle","Arcuate line"],1,"M muscles (roof), A aponeurosis, L ligament (floor), T transversalis fascia (posterior wall)."],
+[4,"U","Which structure lies OUTSIDE the spermatic cord coverings?",["Genital branch of genitofemoral","Vas deferens","Ilioinguinal nerve","Pampiniform plexus"],2,"It enters laterally and exits at the superficial ring outside the cord."],
+[4,"Ap","A groin hernia lying BELOW and LATERAL to the pubic tubercle?",["Indirect inguinal","Direct inguinal","Femoral","Spigelian"],2,"Inguinal hernias lie above and medial to the tubercle."],
+[4,"U","An INDIRECT hernia enters the deep ring?",["Medial to inferior epigastric vessels","Lateral to inferior epigastric vessels","Through Hesselbach's triangle","Below the inguinal ligament"],1,"Direct hernias bulge medial to the vessels."],
+[4,"Ap","A hernia is controlled by occluding the deep ring and does NOT appear on coughing. It is?",["Direct","Femoral","Indirect","Incisional"],2,"Direct hernias are uncontrolled."],
+[4,"R","Which hernia has the HIGHEST strangulation risk?",["Femoral","Direct inguinal","Indirect inguinal","Umbilical in infants"],0,"A rigid lacunar ligament and narrow neck."],
+[4,"Ap","You cannot 'get above' a scrotal swelling. Most likely?",["Hydrocele of the tunica","Inguinoscrotal hernia","Epididymal cyst","Varicocele"],1,"Hernias continue into the inguinal canal."],
+[4,"Ap","A 15-year-old: sudden severe testicular pain, high-riding horizontal testis, absent cremasteric reflex. Diagnosis and window for exploration?",["Epididymo-orchitis, 24 h","Torsion, within 6 h","Hydrocele, elective","Varicocele, 48 h"],1,"Bell-clapper deformity; Prehn's sign negative."],
+[4,"An","Which finding favours epididymo-orchitis over torsion?",["Absent cremasteric reflex","Positive Prehn's sign (elevation relieves pain)","Horizontal lie","Sudden onset"],1,"Also dysuria, fever and a preserved cremasteric reflex."],
+[4,"E","A man aged 65 develops a sudden RIGHT varicocele that does not empty lying flat. Best interpretation?",["Routine idiopathic varicocele","Renal cell carcinoma invading the renal vein or IVC","Epididymitis","Inguinal hernia"],1,"Board trap: 90% are left-sided; a sudden right-sided or non-emptying varicocele needs imaging for RCC."],
+[4,"R","Why are varicoceles mostly left-sided?",["Left testicular vein drains at a right angle into the left renal vein","Left testis is larger","Left vas is longer","Right vein has no valves"],0,"The right testicular vein enters the IVC obliquely."],
+[4,"U","The medial border of Hesselbach's triangle?",["Inferior epigastric vessels","Lateral border of rectus abdominis","Inguinal ligament","Femoral artery"],1,"Superolateral = inferior epigastrics; inferior = Poupart's ligament."],
+[5,"R","Midgut visceral pain is referred to the?",["Epigastrium","Periumbilical region","Hypogastrium","Right shoulder"],1,"Foregut = epigastrium; hindgut = hypogastrium."],
+[5,"Ap","Palpating the LEFT iliac fossa causes pain in the RIGHT iliac fossa. Sign?",["Psoas","Obturator","Rovsing's","Carnett's"],2,"Colonic gas displaced to the caecum stretches the inflamed appendix."],
+[5,"Ap","Pain on passive hip EXTENSION in appendicitis suggests?",["Pelvic appendix","Retrocaecal appendix","Subhepatic appendix","Normal appendix"],1,"Positive psoas sign."],
+[5,"Ap","Pain on passive INTERNAL rotation of the flexed hip suggests?",["Retrocaecal appendix","Pelvic appendix (obturator sign)","Cholecystitis","Pancreatitis"],1,"The appendix abuts obturator internus."],
+[5,"An","In Carnett's test, pain DECREASES when the abdominal wall is tensed. Interpretation?",["Abdominal wall pathology","Intra-abdominal (visceral) pathology","Malingering","Rectus sheath haematoma"],1,"Tensed muscle shields the viscera; wall pain increases or is unchanged."],
+[5,"R","Direction of spleen enlargement?",["Inferolaterally toward the left iliac fossa","Inferomedially toward the right iliac fossa","Straight down toward the pelvis","Superiorly"],1,"Palpate from the RIF obliquely up to the left costal margin."],
+[5,"An","A left hypochondrial mass: splenic notch present, cannot get above, dull to percussion. Diagnosis?",["Enlarged left kidney","Enlarged spleen","Gastric mass","Colonic mass"],1,"A kidney is resonant, ballotable, and you can get above it."],
+[5,"U","What stops the enlarging spleen dropping straight down?",["Gastrosplenic ligament","Phrenicocolic ligament","Lienorenal ligament","Falciform ligament"],1,"The sustentaculum lienis."],
+[5,"R","Boundaries of Calot's triangle?",["Cystic duct, common hepatic duct, liver edge","Cystic duct, CBD, duodenum","Hepatic artery, portal vein, CBD","Cystic artery, gallbladder, liver"],0,"Contains the cystic artery."],
+[5,"Ap","Painless obstructive jaundice with a palpable NON-tender gallbladder suggests?",["Gallstones","Carcinoma of the pancreatic head","Hepatitis A","Cholecystitis"],1,"Courvoisier's law."],
+[5,"R","Charcot's triad of cholangitis?",["Pain, jaundice, fever with rigors","Pain, vomiting, jaundice","Fever, hypotension, confusion","Jaundice, pruritus, pale stools"],0,"Reynolds' pentad adds hypotension and altered mental status."],
+[5,"E","RUQ pain, jaundice, rigors, BP 80/50 and confusion. Best decision?",["Oral antibiotics and discharge","Resuscitation, IV antibiotics and urgent biliary decompression","Elective cholecystectomy","Observe overnight"],1,"Reynolds' pentad = acute suppurative cholangitis, an emergency."],
+[6,"R","Haematemesis always indicates a bleeding source?",["Proximal to the ligament of Treitz","Distal to the ileocaecal valve","In the rectum","In the caecum"],0,"Coffee-grounds = acid haematin."],
+[6,"U","Approximate blood needed in the gut to produce melaena?",["10 mL","≥ 50–100 mL","500 mL","> 1500 mL"],1,"It must stay in the gut for hours so bacteria can convert Hb to haematin."],
+[6,"Ap","Copious non-bilious projectile vomiting with a succussion splash more than 4 h after a meal?",["Small-bowel obstruction","Gastric outlet obstruction","Acute pancreatitis","Appendicitis"],1,"Obstruction is proximal to the ampulla of Vater, hence non-bilious."],
+[6,"An","Metabolic picture of prolonged gastric outlet obstruction?",["Hyperchloraemic acidosis","Hypochloraemic hypokalaemic metabolic alkalosis","Respiratory alkalosis","Hyperkalaemic acidosis"],1,"Loss of HCl and K+ plus aldosterone effect."],
+[6,"U","Why does GOO cause paradoxical ACIDIC urine?",["Lactic acid production","Severe K+ depletion: the distal tubule saves Na+ by secreting H+","Renal tubular acidosis","Ketosis"],1,"The urine is acidic in an alkalotic patient."],
+[6,"E","Best initial fluid for a patient with GOO and metabolic alkalosis?",["5% dextrose","0.9% saline plus potassium chloride","Hartmann's alone","Sodium bicarbonate"],1,"Chloride lets the kidney excrete bicarbonate, and K+ stops H+ wasting."],
+[6,"R","Which cell secretes intrinsic factor?",["Chief cell","G cell","Parietal cell","ECL cell"],2,"Autoimmune destruction causes pernicious anaemia."],
+[6,"R","G cells are located in the?",["Gastric fundus","Antrum and pylorus","Duodenal bulb only","Body of the stomach"],1,"They secrete gastrin."],
+[6,"U","How do NSAIDs promote peptic ulcers?",["Directly increase gastrin","Block prostaglandins, reducing mucus and bicarbonate","Destroy parietal cells","Raise H2 receptor activity"],1,"Prostaglandin synthesis blockade."],
+[6,"Ap","Recurrent severe ulcers with a gastrin-secreting tumour?",["Zollinger-Ellison syndrome","Menetrier's disease","Pernicious anaemia","Carcinoid syndrome"],0,"Gastrinoma causes acid hypersecretion."],
+[6,"Ap","8-month-old with colicky screaming, vomiting and red-currant-jelly stool. Diagnosis and first-line treatment?",["Volvulus, laparotomy","Intussusception, air or hydrostatic enema reduction","Hirschsprung's, biopsy","Gastroenteritis, ORS"],1,"Target or doughnut sign on ultrasound."],
+[6,"Ap","Neonate: no meconium in 48 h, then an explosive stool after PR. Gold-standard test?",["Barium enema","Rectal suction biopsy","Abdominal X-ray","Anorectal manometry only"],1,"Hirschsprung's: absent ganglion cells and hypertrophic nerve trunks."],
+[6,"An","Longitudinal ileal ulcers on the antimesenteric border in week 3 of fever suggest?",["Amoebic perforation","Typhoid perforation","Crohn's disease","Ischaemic colitis"],1,"Amoebic ulcers are flask-shaped in the caecum and ascending colon."],
+[7,"Ap","Terminal haematuria and terminal dysuria after freshwater exposure in the Volta Basin?",["Schistosoma haematobium","Renal stone","Wilms' tumour","Glomerulonephritis"],0,"Terminal-spined ova on urine microscopy."],
+[7,"E","Blood drips from the meatus after a straddle injury. Best next step?",["Immediate urethral catheterisation","Ascending urethrogram; do NOT catheterise","Discharge","Cystoscopy first"],1,"Initial haematuria and meatal blood suggest anterior urethral disruption."],
+[7,"U","Worm-like (vermiform) clots indicate a source in the?",["Bladder","Urethra","Ureter (upper tract)","Prostate"],2,"Bladder clots are amorphous."],
+[7,"R","BPH arises in which zone?",["Peripheral zone","Transition zone","Central zone","Anterior stroma only"],1,"Prostate cancer arises in the peripheral zone."],
+[7,"Ap","DRE: hard, craggy, asymmetric prostate with obliterated median sulcus?",["BPH","Carcinoma","Prostatitis","Normal"],1,"BPH is smooth, symmetric and elastic."],
+[7,"U","Why does prostate cancer spread to lumbar spine and pelvis?",["Batson's valveless venous plexus","Thoracic duct","Hepatic portal system","Direct invasion only"],0,"Osteoblastic (sclerotic) metastases."],
+[7,"An","3-year-old with a smooth firm flank mass that does NOT cross the midline, haematuria and hypertension?",["Neuroblastoma","Wilms' tumour","Hepatoblastoma","Splenomegaly"],1,"Normal catecholamines; claw sign on imaging."],
+[7,"An","1-year-old with a hard 'rocky' mass crossing the midline and raised urinary VMA/HVA?",["Wilms' tumour","Neuroblastoma","Polycystic kidney","Hydronephrosis"],1,"Calcification in 85%; it encases the aorta and IVC."],
+[7,"R","Imaging sign of Wilms' tumour distorting the calyces?",["Claw sign","Target sign","Coffee-bean sign","String sign"],0,"An intrarenal mass."],
+[8,"Ap","Mid-shaft humerus fracture with wrist drop. Nerve injured?",["Ulnar","Median","Radial","Axillary"],2,"Spiral groove."],
+[8,"Ap","Claw hand with positive Froment's sign?",["Ulnar nerve injury","Median nerve injury","Radial nerve injury","Axillary nerve injury"],0,"Medial epicondyle fracture or cubital tunnel."],
+[8,"Ap","Supracondylar humerus fracture with ape hand and failure to flex the index finger?",["Radial nerve","Median nerve (AIN)","Ulnar nerve","Musculocutaneous nerve"],1,"Also watch for brachial artery injury and Volkmann's contracture."],
+[8,"Ap","Surgical neck of humerus fracture. Expected deficit?",["Wrist drop","Deltoid paralysis and loss over the regimental badge area","Claw hand","Winged scapula"],1,"Axillary nerve (C5–C6)."],
+[8,"R","Winged scapula results from injury to the?",["Long thoracic nerve","Spinal accessory nerve","Suprascapular nerve","Axillary nerve"],0,"Serratus anterior is paralysed."],
+[8,"Ap","Dashboard injury: hip flexed, adducted, internally rotated, limb shortened?",["Anterior dislocation","Posterior dislocation","Neck of femur fracture","Pelvic fracture"],1,"Risks: sciatic nerve injury and AVN of the femoral head."],
+[8,"Ap","Elderly woman falls: leg shortened and externally rotated?",["Posterior hip dislocation","Neck of femur fracture","Tibial plateau fracture","Anterior dislocation"],1,"AVN risk from the medial circumflex femoral artery."],
+[8,"U","TRUE limb length is measured from?",["Umbilicus to medial malleolus","ASIS to medial malleolus","Xiphisternum to heel","ASIS to lateral malleolus"],1,"Apparent length uses the umbilicus."],
+[8,"R","In chronic osteomyelitis, the thick sheath of new bone around dead bone is the?",["Sequestrum","Involucrum","Cloaca","Brodie's abscess"],1,"Sequestrum = dead bone; cloaca = drainage defect."],
+[8,"Ap","Supracondylar fracture with a missed compartment syndrome risks?",["Volkmann's ischaemic contracture","Dupuytren's contracture","Carpal tunnel","Sudeck's atrophy only"],0,"Check the pulse and pain on passive finger extension."],
+[9,"Ap","Parkland: 70 kg adult, 30% TBSA. Volume to give in the FIRST 8 h from injury?",["2800 mL","4200 mL","8400 mL","1400 mL"],1,"Total = 4 × 70 × 30 = 8400 mL; half in the first 8 h = 4200 mL."],
+[9,"R","Which burn depth is typically painless?",["Superficial partial","Deep partial","Full thickness (3rd degree)","1st degree"],2,"Dermal nerve endings are destroyed."],
+[9,"U","In the rule of nines, each LEG represents?",["9%","14%","18%","27%"],2,"Head 9%, each arm 9%, trunk 18% + 18%, perineum 1%."],
+[9,"Ap","HR 125, hypotension, RR 35, anxious and confused, estimated 35% blood loss. ATLS class?",["Class I","Class II","Class III","Class IV"],2,"Class III = 30–40%; treat with crystalloid plus blood."],
+[9,"An","Class II shock: BP normal but pulse pressure narrow. Why?",["Cardiac tamponade","Catecholamine-driven vasoconstriction raises diastolic pressure","Drug effect","Measurement error"],1,"Compensated shock: BP falls only in class III."],
+[10,"R","Imaging of choice in a woman under 35 with a breast lump (triple assessment)?",["Mammography","Ultrasound","MRI","CT"],1,"Dense tissue hides lesions on mammography; ≥ 35 years use mammography."],
+[10,"U","Mechanism of peau d'orange?",["Infection of the dermis","Tumour emboli blocking dermal lymphatics","Cooper's ligament shortening","Venous thrombosis"],1,"Dimpling and tethering come from Cooper's ligaments."],
+[10,"Ap","20-year-old with a mobile, slippery, rubbery, painless breast lump?",["Carcinoma","Fibroadenoma","Breast cyst","Fat necrosis"],1,"'Breast mouse'."],
+[11,"An","Trachea shifted AWAY, hyper-resonant percussion and absent breath sounds. Diagnosis?",["Lobar pneumonia","Tension pneumothorax","Lung collapse","Asthma"],1,"Collapse pulls the trachea TOWARD the lesion; massive effusion pushes it away but is stony dull."],
+[13,"E","A candidate writes that the spleen enlarges inferolaterally toward the LEFT iliac fossa. Evaluate.",["Correct","Incorrect: it enlarges inferomedially toward the right iliac fossa","Correct in children","Correct only in malaria"],1,"The phrenicocolic ligament blocks descent; the spleen follows the 10th rib across the umbilicus."]
+];
+const secName=s=>s==13?"Master Traps":S[s]||"Chest";
+const fs=document.getElementById("fs"),fb=document.getElementById("fb"),L=document.getElementById("list"),sc=document.getElementById("sc");
+fs.innerHTML='<option value="0">All sections</option>'+[...new Set(Q.map(q=>q[0]))].map(s=>`<option value="${s}">${secName(s)}</option>`).join("");
+fb.innerHTML='<option value="">All Bloom levels</option>'+Object.entries(B).map(([k,v])=>`<option value="${k}">${v}</option>`).join("");
+let ok=0,tot=0;
+Q.forEach((q,i)=>{const d=document.createElement("div");d.className="q";d.dataset.s=q[0];d.dataset.b=q[1];
+d.innerHTML=`<div class="tags"><span class="tag">${B[q[1]]}</span>Q${i+1} · ${secName(q[0])}</div><b>${q[2]}</b>`+q[3].map((o,j)=>`<button class="o" data-j="${j}">${"ABCD"[j]}. ${o}</button>`).join("")+`<div class="ex"><b>Answer: ${"ABCD"[q[4]]}.</b> ${q[5]}</div>`;
+d.onclick=e=>{const b=e.target.closest(".o");if(!b||d.classList.contains("done"))return;const j=+b.dataset.j;d.classList.add("done");tot++;if(j==q[4])ok++;else b.classList.add("no");d.querySelectorAll(".o")[q[4]].classList.add("ok");sc.textContent=`Score: ${ok}/${tot}`};
+L.appendChild(d)});
+function filt(){[...L.children].forEach(d=>d.style.display=(fs.value==0||d.dataset.s==fs.value)&&(!fb.value||d.dataset.b==fb.value)?"":"none")}
+fs.onchange=fb.onchange=filt;
+document.getElementById("rs").onclick=()=>{ok=tot=0;sc.textContent="Score: 0/0";[...L.children].forEach(d=>{d.classList.remove("done");d.querySelectorAll(".o").forEach(o=>o.classList.remove("ok","no"))})};
+</script></body></html>
